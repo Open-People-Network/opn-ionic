@@ -1,10 +1,16 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {Profile} from "../../models/profile";
 
-import { Item } from '../../models/item';
+function str_match(a: string, b: string) {
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+  return a.indexOf(b) != -1
+    || b.indexOf(a) != -1
+}
 
 @Injectable()
 export class Items {
-  items: Item[] = [];
+  items: Profile[] = [];
 
   defaultItem: any = {
     "name": "Burt Bear",
@@ -12,9 +18,28 @@ export class Items {
     "about": "Burt is a Bear.",
   };
 
-
   constructor() {
-    let items = [
+    let items: Profile[] = [
+      {
+        "name": "Beeno Tung",
+        "profilePic": "assets/img/speakers/beeno.svg",
+        "about": "Technical Consultant.",
+        tags: ['Frontend', 'Backend', 'Full-stack', 'P2P', 'Matching', 'Developer', 'IT'
+          , 'Tangle', 'Blockchain'
+          , 'Programmer'
+          , 'Education'
+        ]
+      },
+      {
+        "name": "Anne Yip",
+        "profilePic": "assets/img/speakers/eagle.jpg",
+        "about": "Digital Marketer.",
+        tags: [
+          'Media'
+          , 'Facebook'
+          , 'Digital Marketing'
+        ]
+      },
       {
         "name": "Burt Bear",
         "profilePic": "assets/img/speakers/bear.jpg",
@@ -53,8 +78,24 @@ export class Items {
     ];
 
     for (let item of items) {
-      this.items.push(new Item(item));
+      this.items.push(item);
     }
+  }
+
+  fullQuery(q) {
+    console.log('full query', q);
+    return this.items.filter(item => {
+
+      for (let k in item) {
+        const v = item[k];
+        if (typeof v === "string" && typeof q === "string" && str_match(v, q)) {
+          return item;
+        } else if (q == v) {
+          return item;
+        }
+      }
+      return null;
+    })
   }
 
   query(params?: any) {
@@ -75,11 +116,11 @@ export class Items {
     });
   }
 
-  add(item: Item) {
+  add(item: Profile) {
     this.items.push(item);
   }
 
-  delete(item: Item) {
+  delete(item: Profile) {
     this.items.splice(this.items.indexOf(item), 1);
   }
 }

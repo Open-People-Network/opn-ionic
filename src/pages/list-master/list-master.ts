@@ -3,6 +3,7 @@ import { IonicPage, ModalController, NavController } from 'ionic-angular';
 
 import { Item } from '../../models/item';
 import { Items } from '../../providers/providers';
+import {Profile} from "../../models/profile";
 
 @IonicPage()
 @Component({
@@ -10,7 +11,7 @@ import { Items } from '../../providers/providers';
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: Item[];
+  currentItems: Profile[];
 
   constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController) {
     this.currentItems = this.items.query();

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 
-import { Item } from '../../models/item';
-import { Items } from '../../providers/providers';
+import {Item} from '../../models/item';
+import {Items} from '../../providers/providers';
+import {Profile} from "../../models/profile";
 
 @IonicPage()
 @Component({
@@ -11,9 +12,10 @@ import { Items } from '../../providers/providers';
 })
 export class SearchPage {
 
-  currentItems: any = [];
+  currentItems: Profile[] = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public items: Items) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams, public items: Items) {
+  }
 
   /**
    * Perform a service for the proper items.
@@ -24,9 +26,10 @@ export class SearchPage {
       this.currentItems = [];
       return;
     }
-    this.currentItems = this.items.query({
-      name: val
-    });
+    this.currentItems = this.items.fullQuery(val);
+    // this.currentItems = this.items.query({
+    //   name: val
+    // });
   }
 
   /**

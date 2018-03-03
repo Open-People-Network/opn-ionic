@@ -1,47 +1,47 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {Storage} from '@ionic/storage';
 
 /**
  * Api is a generic REST Api handler. Set your API url first.
  */
+const _DB = "DB";
+
 @Injectable()
 export class Api {
-  url: string = 'https://example.com/api/v1';
 
-  constructor(public http: HttpClient) {
+  _db: any;
+
+  constructor(public storage: Storage) {
+    this.getDB();
   }
 
-  get(endpoint: string, params?: any, reqOpts?: any) {
-    if (!reqOpts) {
-      reqOpts = {
-        params: new HttpParams()
-      };
-    }
-
-    // Support easy query params for GET requests
-    if (params) {
-      reqOpts.params = new HttpParams();
-      for (let k in params) {
-        reqOpts.params = reqOpts.params.set(k, params[k]);
+  async getDB() {
+    if (!this._db) {
+      this._db = await this.storage.get(_DB);
+      if (!this._db) {
+        this._db = {};
       }
     }
-
-    return this.http.get(this.url + '/' + endpoint, reqOpts);
+    return this._db;
   }
 
-  post(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.post(this.url + '/' + endpoint, body, reqOpts);
+  storeDB() {
+    if (this._db) {
+      return this.storage.set(_DB, this._db);
+    }
   }
 
-  put(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.put(this.url + '/' + endpoint, body, reqOpts);
+  async get(k, defaultValue?) {
+    const db = await this.getDB();
+    if (k in db) {
+      return db[k]
+    }
+    return defaultValue;
   }
 
-  delete(endpoint: string, reqOpts?: any) {
-    return this.http.delete(this.url + '/' + endpoint, reqOpts);
-  }
-
-  patch(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.patch(this.url + '/' + endpoint, body, reqOpts);
+  async set(k, v) {
+    const db = await this.getDB();
+    db[k] = v;
+    return this.storeDB();
   }
 }

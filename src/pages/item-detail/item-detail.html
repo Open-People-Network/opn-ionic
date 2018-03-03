@@ -12,7 +12,9 @@
   </div>
 
   <div class="item-detail" padding>
-    <h2>{{item.name}}</h2>
-    <p>{{item.about}}</p>
+    <h2>{{ item.name }}</h2>
+    <p>{{ item.about }}</p>
+    <ion-note *ngIf="item.tags">{{ item.tags.join(', ') }}</ion-note>
+    <p *ngIf="item.note">{{ item.note }}</p>
   </div>
 </ion-content>

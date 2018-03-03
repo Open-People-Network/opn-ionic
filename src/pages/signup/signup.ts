@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, ToastController } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {IonicPage, NavController, ToastController} from 'ionic-angular';
 
-import { User } from '../../providers/providers';
-import { MainPage } from '../pages';
+import {User} from '../../providers/providers';
+import {MainPage} from '../pages';
+import {Settings} from "../../providers/settings/settings";
+import {DefaultAccount} from "../../models/account";
+
+export const _Account = 'Account';
 
 @IonicPage()
 @Component({
@@ -14,28 +18,33 @@ export class SignupPage {
   // The account fields for the login form.
   // If you're using the username field with or without email, make
   // sure to add it to the type
-  account: { name: string, email: string, password: string } = {
-    name: 'Test Human',
-    email: 'test@example.com',
-    password: 'test'
-  };
+  account: Account = DefaultAccount;
 
   // Our translated text strings
   private signupErrorString: string;
 
-  constructor(public navCtrl: NavController,
-    public user: User,
-    public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+  constructor(public navCtrl: NavController
+    , public user: User
+    , public toastCtrl: ToastController
+    , public settings: Settings
+    , public translateService: TranslateService) {
 
     this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
       this.signupErrorString = value;
-    })
+    });
+
+  }
+
+  async init() {
+    const a = await this.settings.getValue("account");
+    if (a) {
+      this.account = a;
+    }
   }
 
   doSignup() {
     // Attempt to login in through our User service
-    this.user.signup(this.account).subscribe((resp) => {
+    this.user.signup(this.account).then((resp) => {
       this.navCtrl.push(MainPage);
     }, (err) => {
 

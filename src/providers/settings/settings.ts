@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
+import {Injectable} from '@angular/core';
+import {Storage} from '@ionic/storage';
+import {Settings as SettingsType} from "../../models/settings";
 
 /**
  * A simple settings/config class for storing key/value pairs with persistence.
@@ -8,7 +9,7 @@ import { Storage } from '@ionic/storage';
 export class Settings {
   private SETTINGS_KEY: string = '_settings';
 
-  settings: any;
+  settings: SettingsType;
 
   _defaults: any;
   _readyPromise: Promise<any>;
@@ -55,7 +56,7 @@ export class Settings {
     return this.storage.set(this.SETTINGS_KEY, value);
   }
 
-  getValue(key: string) {
+  getValue(key: keyof SettingsType): Promise<SettingsType[keyof SettingsType]> {
     return this.storage.get(this.SETTINGS_KEY)
       .then(settings => {
         return settings[key];
