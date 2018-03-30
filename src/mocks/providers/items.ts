@@ -24,6 +24,7 @@ export class Items {
         "name": "Beeno Tung",
         "profilePic": "assets/img/speakers/beeno.svg",
         "about": "Technical Consultant.",
+        "note":"<a href='https://beeno-tung.surge.sh'>Homepage</a>",
         tags: ['Frontend', 'Backend', 'Full-stack', 'P2P', 'Matching', 'Developer', 'IT'
           , 'Tangle', 'Blockchain'
           , 'Programmer'
@@ -92,6 +93,8 @@ export class Items {
           return item;
         } else if (q == v) {
           return item;
+        } else if (Array.isArray(v)) {
+          return (v as string[]).some(s => str_match(s, q))
         }
       }
       return null;
